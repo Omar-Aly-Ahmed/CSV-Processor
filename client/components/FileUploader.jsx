@@ -3,10 +3,10 @@ import FilePhoto from "../assets/file-photo.png";
 
 const FileUploader = () => {
   return (
-    <div className="h-screen flex items-center overflow-hidden">
-      <div className="absolute inset-0 w-full h-full m-auto"></div>
+    <div className="h-full p-10 flex items-center overflow-hidden">
+      <div className="absolute inset-0 w-full  m-auto"></div>
       <div className="m-auto px-6 sm:px-0 sm:w-8/12 md:w-7/12 lg:w-6/12 xl:w-4/12">
-        <div className="relative group w-full h-64 flex justify-center items-center">
+        <div className="relative mt-32 group w-full h-64 flex justify-center items-center">
           <div className="absolute inset-0 w-full h-full rounded-xl bg-white bg-opacity-80 shadow-2xl backdrop-blur-xl group-hover:bg-opacity-80 group-hover:scale-110 transition duration-300"></div>
           <input
             accept=".csv"
