@@ -10,11 +10,7 @@ import { useEffect } from 'react'
 import { v4 } from "uuid";
 
 export default function Home() {
-  const [files, setFiles] = useState([
-    {
-      name: "myFile.csv",
-    },
-  ]);
+  const [files, setFiles] = useState([]);
   const [cookie, setCookie] = useState()
 
   useEffect(() => {
@@ -24,14 +20,12 @@ export default function Home() {
     else {
       setCookie(cookieCutter.set('Token', v4()))
     }
-    console.log(cookie)
   }, [])
 
-  console.log(files);
   return (
     <div>
-      <FileUploader files={files} setFiles={setFiles} />
-      <Table token={cookie}/>
+      <FileUploader token={cookie} files={files} setFiles={setFiles} />
+      <Table token={cookie} />
       <Button text="Download latest result" />
     </div>
   );

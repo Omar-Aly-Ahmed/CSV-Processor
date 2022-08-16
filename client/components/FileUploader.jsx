@@ -1,16 +1,31 @@
 import Image from "next/image";
 import FilePhoto from "../assets/file-photo.png";
 
-const FileUploader = ({ files, setFiles, removeFile }) => {
-  const uploadHandler = (event) => {
+const FileUploader = ({ token, files, setFiles, removeFile }) => {
+  const uploadHandler = async (event) => {
     const file = event.target.files[0];
     file.isUploading = true;
     setFiles([...files, file]);
 
     //upload file
-
     const formData = new FormData();
     formData.append(file.name, file, file.name);
+
+    const response = await fetch('/api/files', {
+      method: 'POST',
+      body: file,
+      headers: {
+        'Token': token,
+      },
+    },
+      file.isUploading = false,
+      setFiles([...files, file]),
+    )
+    const data = await response.json()
+
+
+
+
   };
   return (
     <div className="h-full p-10 flex items-center overflow-hidden">
