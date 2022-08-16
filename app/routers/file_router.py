@@ -8,7 +8,8 @@ router = APIRouter(prefix='/files')
 
 @router.get("/", tags=['files'])
 async def get_files(req: Request):
-    user_id = req.headers.get('token')
+    user_id = req.headers.get('Token')
+    print(f"{'a'*100}\n{user_id}", flush=True)
     return await file_repo.get_all_files(user_id)
 
 
@@ -22,23 +23,24 @@ async def upload_file(
     req: Request,
     background_tasks: BackgroundTasks,
 ):
-    user_id = req.headers.get('token')
-
-    data = await req.json()
-    file = await file_repo.add_file(
+    id = req.headers.get('Token')
+    data = await req.body()
+    print(f"{'b'*100}\n{data}", flush=True)
+    result = await file_repo.add_file(
         File(
-            user_id,
+            user_id=id,
             file_name=data['file_name'],
             text=json.dumps(data['text'])
         ),
         background_tasks
     )
-    return file
+
+    return {"result": "ha3"}
 
 
 @router.delete("/", tags=['files'])
 async def bulk_delete_files_of_user(req: Request):
-    user_id = req.headers.get('token')
+    user_id = req.headers.get('Token')
     return await file_repo.bulk_delete_files(user_id)
 
 
@@ -49,7 +51,7 @@ async def upload_file(file_pk: str):
 
 @router.get("/keys", tags=['files'])
 async def get_files(req: Request):
-    user_id = req.headers.get('token')
+    user_id = req.headers.get('Token')
     return await file_repo.get_all_files_keys(user_id)
 
 
