@@ -11,8 +11,6 @@ const FileUploader = ({ files, setFiles, removeFile }) => {
 
     const formData = new FormData();
     formData.append(file.name, file, file.name);
-
-    
   };
   return (
     <div className="h-full p-10 flex items-center overflow-hidden">
@@ -34,10 +32,10 @@ const FileUploader = ({ files, setFiles, removeFile }) => {
                 width={150}
                 alt="illustration"
               />
-              <p className="text-gray-700 text-lg">
+              <div className="text-gray-700 text-lg">
                 Drag and drop a file or <br />{" "}
-                <p className="text-blue-500"> Upload a file </p>
-              </p>
+                <div className="text-blue-500"> Upload a file </div>
+              </div>
             </div>
           </div>
         </div>
