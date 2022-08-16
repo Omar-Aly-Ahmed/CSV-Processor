@@ -1,5 +1,5 @@
 from . import redis
-from redis_om import HashModel, Field
+from redis_om import HashModel, Field, Migrator
 
 class File(HashModel):
     user_id: str = Field(index=True)
@@ -8,3 +8,5 @@ class File(HashModel):
     
     class Meta:
         database=redis
+
+Migrator().run()
