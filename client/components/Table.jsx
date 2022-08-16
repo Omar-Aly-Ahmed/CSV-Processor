@@ -5,7 +5,7 @@ const Table = ({ token }) => {
     const [fileDetails, setFileDetails] = useState()
 
     useEffect(() => {
-        fetch('/api/files', {
+        fetch('http://localhost:8001/api/files/', {
             method: 'GET',
             headers: {
                 "Token": token,
@@ -19,7 +19,7 @@ const Table = ({ token }) => {
 
     return (
         <div>
-            {fileDetails &&
+            {fileDetails?.length != 0 &&
                 <div className="flex justify-center items-center">
                     < div className="overflow-hidden h-32" >
                         <table className="table w-full">
@@ -31,7 +31,7 @@ const Table = ({ token }) => {
                                 </tr>
                             </thead>
                             <tbody data-theme="autumn">
-                                {fileDetails.map((file) => {
+                                {fileDetails?.map((file) => {
                                     return (
                                         <TableEntry key={file.id} id={file.id} fileName={file.filename} result={file.result} />
                                     )

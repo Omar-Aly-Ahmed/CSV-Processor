@@ -11,11 +11,13 @@ const FileUploader = ({ token, files, setFiles, removeFile }) => {
     const formData = new FormData();
     formData.append(file.name, file, file.name);
 
-    const response = await fetch('/api/files', {
+    const response = await fetch('http://localhost:8001/api/files/', {
       method: 'POST',
       body: file,
+      mode: "no-cors",
       headers: {
         'Token': token,
+        'Content-Type': 'application/json'
       },
     },
       file.isUploading = false,
