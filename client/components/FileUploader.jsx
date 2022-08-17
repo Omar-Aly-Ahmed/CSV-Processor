@@ -15,7 +15,7 @@ const FileUploader = ({ token, files, setFiles, removeFile }) => {
     axios({
       method: "post",
       url: "http://localhost:8001/api/files/",
-      data: { formData },
+      data: { file },
       mode: "no-cors",
       headers: {
         Token: token,
