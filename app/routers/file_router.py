@@ -1,7 +1,13 @@
-import json
-from fastapi import APIRouter, BackgroundTasks, BackgroundTasks, Request, Header, Header
+import json, csv, ast
+from fastapi import (
+    APIRouter,
+    BackgroundTasks,
+    Request,
+    UploadFile,
+    File
+)
 from app.db import file_repo
-from app.models.file import File
+from app.models.file_entity import FileEntity
 
 router = APIRouter(prefix='/files')
 
@@ -9,7 +15,6 @@ router = APIRouter(prefix='/files')
 @router.get("/", tags=['files'])
 async def get_files(req: Request):
     user_id = req.headers.get('Token')
-    print(f"{'a'*100}\n{user_id}", flush=True)
     return await file_repo.get_all_files(user_id)
 
 
@@ -22,21 +27,33 @@ async def get_file(file_pk):
 async def upload_file(
     req: Request,
     background_tasks: BackgroundTasks,
+    file: UploadFile = File(...)
 ):
-    id = req.headers.get('Token')
-    data = await req.body()
-    print(f"{'b'*100}\n{data}", flush=True)
+
+    user_id = req.headers.get('Token')
+    raw_data = await file.read()
+    
+    text = ' '.join(list(
+        filter(
+            lambda s: len(s) > 2,
+            raw_data
+                .decode('utf-8-sig')
+                .replace('\r\n', '')
+                .replace(',', ' ')
+                .split(' ')
+        )
+    ))
+
     result = await file_repo.add_file(
-        File(
-            user_id=id,
-            file_name=data['file_name'],
-            text=json.dumps(data['text'])
+        FileEntity(
+            user_id=user_id,
+            file_name=file.filename,
+            text=text,
         ),
         background_tasks
     )
 
-    return {"result": "ha3"}
-
+    return result
 
 @router.delete("/", tags=['files'])
 async def bulk_delete_files_of_user(req: Request):
@@ -53,7 +70,6 @@ async def upload_file(file_pk: str):
 async def get_files(req: Request):
     user_id = req.headers.get('Token')
     return await file_repo.get_all_files_keys(user_id)
-
 
 async def proccess_file(file):
     return
