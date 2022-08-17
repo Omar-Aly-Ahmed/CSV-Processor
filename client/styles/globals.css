@@ -7,8 +7,8 @@ body {
   background: url(../assets/bg.svg);
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  font-weight: bolder;
 }
 
 a {
@@ -18,6 +18,9 @@ a {
 
 * {
   box-sizing: border-box;
+}
+.w-fulll {
+  width: 32%;
 }
 
 @media (prefers-color-scheme: dark) {

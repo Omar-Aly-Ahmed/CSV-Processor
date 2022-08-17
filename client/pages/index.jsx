@@ -23,11 +23,14 @@ export default function Home() {
     }
   }, []);
 
-  const clickHandler = (e) => {
+  const download = (e) => {
     axios({
       method: "get",
-      url: "http://localhost:8001/api/files/",
+      url: "http://localhost:8001/api/files/results",
       responseType: "blob",
+      header: {
+        "Token": cookie,
+      },
     }).then((res) => {
       console.log(res);
       FileDownload(res.data, "results.csv");
@@ -38,7 +41,7 @@ export default function Home() {
     <div>
       <FileUploader token={cookie} files={files} setFiles={setFiles} />
       <Table token={cookie} />
-      <Button onClick={(e) => clickHandler(e)} text="Download latest result" />
+      <Button clickHandler={download} text="Download latest results" />
     </div>
   );
 }
