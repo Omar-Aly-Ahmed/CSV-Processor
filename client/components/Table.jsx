@@ -38,9 +38,9 @@ const Table = ({ token }) => {
                     <TableEntry
                       key={index}
                       id={index}
-                      fileName={file.filename}
+                      fileName={file.name}
                       accuracy={file.accuracy}
-                      result={file.result}
+                      result={file.most_frequent_words}
                     />
                   );
                 })}
