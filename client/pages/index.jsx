@@ -38,7 +38,7 @@ export default function Home() {
     <div>
       <FileUploader token={cookie} files={files} setFiles={setFiles} />
       <Table token={cookie} />
-      <Button onClick={(e) => clickHandler(e)} text="Download latest result" />
+      <Button onClick={(e) => clickHandler(e)} text="Download latest results" />
     </div>
   );
 }
