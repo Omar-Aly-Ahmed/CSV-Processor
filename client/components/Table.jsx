@@ -21,7 +21,7 @@ const Table = ({ token }) => {
         <div>
             {fileDetails?.length != 0 &&
                 <div className="flex justify-center items-center">
-                    < div className="overflow-hidden h-32" >
+                    < div className="overflow-hidden h-full" >
                         <table className="table w-full">
                             <thead data-theme="autumn">
                                 <tr>
