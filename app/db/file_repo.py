@@ -1,5 +1,11 @@
 from app.models.file_entity import FileEntity
 from fastapi import BackgroundTasks
+from random import randint
+import nltk
+
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+
 
 async def get_file(file_pk):
     try:
@@ -7,21 +13,28 @@ async def get_file(file_pk):
     except Exception as e:
         return None
 
+
 async def get_all_files_keys(user_id: str):
     return list(map(
         lambda f: f.pk,
         FileEntity.find(FileEntity.user_id == user_id).all()
     ))
 
+
 async def get_all_files(user_id: str):
     return FileEntity.find(FileEntity.user_id == user_id).all()
 
+
 async def add_file(file: FileEntity, background_tasks: BackgroundTasks):
     background_tasks.add_task(set_expiration, key=file.key(), seconds=44000)
+    background_tasks.add_task(file_process, file.text, file.name)
+
     return file.save()
+
 
 async def delete_file(file_pk: str):
     return FileEntity.delete(file_pk)
+
 
 async def bulk_delete_files(user_id: str):
     count, pks = 0, await get_all_files_keys(user_id)
@@ -29,5 +42,23 @@ async def bulk_delete_files(user_id: str):
         count += FileEntity.delete(pk)
     return count
 
+
 def set_expiration(key, seconds):
     FileEntity.db().expire(name=key, time=seconds)
+
+
+def file_process(fileContent: str, fileName: str):
+    accuracy = randint(1, 100)
+    raw = fileContent
+    raw = raw.strip()
+    tokens = nltk.word_tokenize(raw)
+    text = nltk.Text(tokens)
+
+    tokens_l = [w.lower() for w in tokens]
+    only_nn = [x for (x, y) in tokens_l if y in ('NN')]
+
+    freq = nltk.FreqDist(tokens_l)
+    mCW = freq.most_common(3)
+
+    return accuracy, mCW
+
