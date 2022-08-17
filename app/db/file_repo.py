@@ -27,8 +27,7 @@ async def get_all_files(user_id: str):
 
 async def add_file(file: FileEntity, background_tasks: BackgroundTasks):
     background_tasks.add_task(set_expiration, key=file.key(), seconds=44000)
-    background_tasks.add_task(file_process, file.text, file.name)
-
+    background_tasks.add_task(set_file_results, file)
     return file.save()
 
 
@@ -46,19 +45,21 @@ async def bulk_delete_files(user_id: str):
 def set_expiration(key, seconds):
     FileEntity.db().expire(name=key, time=seconds)
 
+def set_file_results(file: FileEntity):
+    file.accuracy, file.most_frequent_words = file_process(file.text)   
+    file.save()
+    
+def file_process(fileContent: str, fileName: str = None):
+    for _ in range(20000):
+        accuracy = str(randint(1, 100))
+        raw = fileContent
+        raw = raw.strip()
+        tokens = nltk.word_tokenize(raw)
 
-def file_process(fileContent: str, fileName: str):
-    accuracy = randint(1, 100)
-    raw = fileContent
-    raw = raw.strip()
-    tokens = nltk.word_tokenize(raw)
-    text = nltk.Text(tokens)
+        tokens_l = [w.lower() for w in tokens]
 
-    tokens_l = [w.lower() for w in tokens]
-    only_nn = [x for (x, y) in tokens_l if y in ('NN')]
-
-    freq = nltk.FreqDist(tokens_l)
-    mCW = freq.most_common(3)
+        freq = nltk.FreqDist(tokens_l)
+        mCW = ', '.join(list(map(lambda t: t[0], freq.most_common(3))))
 
     return accuracy, mCW
 
