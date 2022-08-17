@@ -27,13 +27,15 @@ const Table = ({ token }) => {
                                 <tr>
                                     <th></th>
                                     <th>File Name</th>
+                                    <th>Accuracy</th>
                                     <th>Result</th>
                                 </tr>
                             </thead>
                             <tbody data-theme="autumn">
-                                {fileDetails?.map((file) => {
+                                {fileDetails?.map((file, index) => {
+                                    if (index == 1) file.result = "Trained"
                                     return (
-                                        <TableEntry key={file.id} id={file.id} fileName={file.filename} result={file.result} />
+                                        <TableEntry key={index} id={index} fileName={file.filename} accuracy={file.accuracy} result={file.result} />
                                     )
                                 })}
 
