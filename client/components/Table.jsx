@@ -4,18 +4,26 @@ import TableEntry from "./TableEntry";
 const Table = ({ token }) => {
   const [fileDetails, setFileDetails] = useState();
 
+    const getData = () => {
+        fetch('http://localhost:8001/api/files/', {
+            method: 'GET',
+            headers: {
+                "Token": token,
+            },
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                setFileDetails(data)
+            })
+
+    }
+
     useEffect(() => {
-      fetch("http://localhost:8001/api/files/", {
-        method: "GET",
-        headers: {
-          Token: token,
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setFileDetails(data);
-        });
-    }, []);
+
+        getData();
+        setInterval(getData, 1000);
+
+    }, [])
 
   return (
     <div>
