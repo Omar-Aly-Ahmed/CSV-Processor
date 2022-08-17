@@ -11,25 +11,23 @@ async def get_file(file_pk):
     try:
         return FileEntity.get(file_pk)
     except Exception as e:
-        return None
+        return []
 
 
 async def get_all_files_keys(user_id: str):
-    return list(map(
-        lambda f: f.pk,
-        FileEntity.find(FileEntity.user_id == user_id).all()
-    ))
-
+    files = FileEntity.find(FileEntity.user_id == user_id).all()
+    return list(map(lambda f: f.pk, files))
 
 async def get_all_files(user_id: str):
-    return FileEntity.find(FileEntity.user_id == user_id).all()
-
-
+    try:
+        return FileEntity.find(FileEntity.user_id == user_id).all()
+    except Exception as e:
+        return []
+    
 async def add_file(file: FileEntity, background_tasks: BackgroundTasks):
     background_tasks.add_task(set_expiration, key=file.key(), seconds=44000)
     background_tasks.add_task(set_file_results, file)
     return file.save()
-
 
 async def delete_file(file_pk: str):
     return FileEntity.delete(file_pk)

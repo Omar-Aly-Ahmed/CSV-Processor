@@ -1,32 +1,47 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import TableEntry from "./TableEntry";
-const Table = ({ token }) => {
+import cookieCutter from "cookie-cutter";
+import axios from "axios";
+
+const Table = ({ _ }) => {
   const [fileDetails, setFileDetails] = useState();
+  const [getCookie, setCookie] = useState("");
 
-    const getData = () => {
-        fetch('http://localhost:8001/api/files/', {
-            method: 'GET',
-            headers: {
-                "Token": token,
-            },
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                setFileDetails(data)
-            })
-
+  useEffect(() => {
+    if (cookieCutter.get("Token")) {
+      setCookie(cookieCutter.get("Token"));
+    } else {
+      setCookie(cookieCutter.set("Token", v4()));
     }
+    setInterval(async () => {
+      await getData()
+    }, 5000)
+  }, []);
 
-    useEffect(() => {
-
-        getData();
-        setInterval(getData, 1000);
-
-    }, [])
+  const getData = async () => {
+    let cookie = getCookie
+    if (cookie == undefined) {
+      return
+    };
+    const res = await axios({
+      method: "GET",
+      url: "http://localhost:8001/api/files/",
+      mode: "no-cors",
+      headers: {
+        "Token": cookie,
+      },
+    })
+    const data = await res.data;
+    if(data.length != 0){
+      setFileDetails(data)
+    }
+    return data;
+  }
 
   return (
     <div>
+      <button onClick={getData} className="btn glass" >hello</button>
       {fileDetails?.length != 0 && (
         <div className="flex  justify-center mb-9 items-center ">
           <div className="overflow-hidden h-full w-fulll ">
@@ -40,18 +55,22 @@ const Table = ({ token }) => {
                 </tr>
               </thead>
               <tbody data-theme="autumn">
-                {fileDetails?.map((file, index) => {
-                  if (index == 1) file.result = "Trained";
-                  return (
-                    <TableEntry
-                      key={index}
-                      id={index}
-                      fileName={file.name}
-                      accuracy={file.accuracy}
-                      result={file.most_frequent_words}
-                    />
-                  );
-                })}
+                {fileDetails &&
+                  fileDetails.map((file, index) => {
+                    if (index == 0) file.most_frequent_words = "Trained";
+                    return (
+                      <TableEntry
+                        key={index + 1}
+                        id={index + 1}
+                        fileName={file.name}
+                        accuracy={file.accuracy}
+                        result={file.most_frequent_words}
+                      />
+                    )
+                  }
+                  )
+
+                }
               </tbody>
             </table>
           </div>

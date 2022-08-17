@@ -13,12 +13,12 @@ const FileUploader = ({ token, files, setFiles, removeFile }) => {
     formData.append(file.name, file, file.name);
 
     axios({
-      method: "post",
-      url: "http://localhost:8001/api/files/",
+      method: "POST",
+      url: "http://localhost:8001/api/files/upload",
       data: { file },
       mode: "no-cors",
       headers: {
-        Token: token,
+        "Token": token,
         "Content-Type": "multipart/form-data",
       },
     })
@@ -30,20 +30,6 @@ const FileUploader = ({ token, files, setFiles, removeFile }) => {
         console.log(err);
 
       });
-
-    //   const response = await fetch('http://localhost:8001/api/files/', {
-    //     method: 'POST',
-    //     body: file,
-    //     mode: "no-cors",
-    //     headers: {
-    //       'Token': token,
-    //       'Content-Type': 'multipart/form-data'
-    //     },
-    //   },
-    //     file.isUploading = false,
-    //     setFiles([...files, file]),
-    //   )
-    //   const data = await response
   };
   return (
     <div className="h-full p-10 flex items-center overflow-hidden">

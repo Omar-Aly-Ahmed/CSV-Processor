@@ -23,25 +23,36 @@ export default function Home() {
     }
   }, []);
 
-  const download = (e) => {
-    axios({
-      method: "get",
+  const download = async (cookie) => {
+    const res = await axios({
+      method: "GET",
       url: "http://localhost:8001/api/files/results",
+      mode: "no-cors",
       responseType: "blob",
-      header: {
+      headers: {
         "Token": cookie,
       },
-    }).then((res) => {
-      console.log(res);
-      FileDownload(res.data, "results.csv");
-    });
-  };
-
+    })
+    let data = await res.data
+    FileDownload(data, "results.csv");
+  }
+  //   fetch("http://localhost:8001/api/files/results", {
+  //     method: "GET",
+  //     responseType: "blob",
+  //     mode: "no-cors",
+  //     header: {
+  //       "Token": cookie,
+  //     },
+  //   }).then((res) => {
+  //     FileDownload(res.data, "results.csv");
+  //   });
+  // };
+  
   return (
-    <div>
+     <div>
       <FileUploader token={cookie} files={files} setFiles={setFiles} />
       <Table token={cookie} />
-      <Button clickHandler={download} text="Download latest results" />
+      <Button clickHandler={()=>{download(cookie)}} text="Download latest results" />
     </div>
   );
 }

@@ -4,9 +4,9 @@ from redis_om import HashModel, Field, Migrator
 
 
 class FileEntity(HashModel):
-    user_id: str = Field(index=True)
     name: str
     text: str
+    user_id: str = Field(index=True)
     accuracy: str = Field(default="-")
     most_frequent_words: str = Field(default="-")
     class Meta:
