@@ -1,7 +1,9 @@
-const Button = ({ text }) => {
+const Button = ({ text, clickHandler }) => {
   return (
     <div className="flex justify-center items-center pb-9 ">
-      <button className="btn btn-outline btn-info"> {text} </button>
+      <button className="btn glass" onClick={clickHandler}>
+        {text}
+      </button>
     </div>
   );
 };
