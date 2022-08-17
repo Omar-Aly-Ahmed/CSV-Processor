@@ -1,5 +1,6 @@
 import Image from "next/image";
 import FilePhoto from "../assets/file-photo.png";
+import axios from "axios";
 
 const FileUploader = ({ token, files, setFiles, removeFile }) => {
   const uploadHandler = async (event) => {
@@ -11,23 +12,38 @@ const FileUploader = ({ token, files, setFiles, removeFile }) => {
     const formData = new FormData();
     formData.append(file.name, file, file.name);
 
-    const response = await fetch('http://localhost:8001/api/files/', {
-      method: 'POST',
-      body: file,
+    axios({
+      method: "post",
+      url: "http://localhost:8001/api/files/",
+      data: { formData },
       mode: "no-cors",
       headers: {
-        'Token': token,
-        'Content-Type': 'application/json'
+        Token: token,
+        "Content-Type": "multipart/form-data",
       },
-    },
-      file.isUploading = false,
-      setFiles([...files, file]),
-    )
-    const data = await response.json()
+    })
+      .then((res) => {
+        file.isUploading = false;
+        setFiles([...files, file]);
+      })
+      .catch((err) => {
+        console.log(err);
 
+      });
 
-
-
+    //   const response = await fetch('http://localhost:8001/api/files/', {
+    //     method: 'POST',
+    //     body: file,
+    //     mode: "no-cors",
+    //     headers: {
+    //       'Token': token,
+    //       'Content-Type': 'multipart/form-data'
+    //     },
+    //   },
+    //     file.isUploading = false,
+    //     setFiles([...files, file]),
+    //   )
+    //   const data = await response
   };
   return (
     <div className="h-full p-10 flex items-center overflow-hidden">
@@ -38,6 +54,7 @@ const FileUploader = ({ token, files, setFiles, removeFile }) => {
           <input
             accept=".csv"
             className="relative z-10 opacity-0 h-full w-full cursor-pointer"
+            name="filename"
             type="file"
             onChange={uploadHandler}
           ></input>
