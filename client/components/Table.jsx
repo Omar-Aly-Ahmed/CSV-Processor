@@ -1,48 +1,38 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import TableEntry from "./TableEntry";
-import cookieCutter from "cookie-cutter";
 import axios from "axios";
 
-const Table = ({ _ }) => {
-  const [fileDetails, setFileDetails] = useState();
-  const [getCookie, setCookie] = useState("");
+const Table = ({ token, files }) => {
+
+  let [fileDetails, setFileDetails] = useState([]);
 
   useEffect(() => {
-    if (cookieCutter.get("Token")) {
-      setCookie(cookieCutter.get("Token"));
-    } else {
-      setCookie(cookieCutter.set("Token", v4()));
-    }
     setInterval(async () => {
-      await getData()
-    }, 5000)
+      console.log(fileDetails.length, fileDetails.map(f => f.accuracy));
+      if (fileDetails.length == 0 || fileDetails.map(f => f.accuracy).includes('-')){
+        const data = await getData()
+        setFileDetails(data)
+      }
+    }, 1000)
   }, []);
 
   const getData = async () => {
-    let cookie = getCookie
-    if (cookie == undefined) {
-      return
-    };
     const res = await axios({
       method: "GET",
       url: "http://localhost:8001/api/files/",
       mode: "no-cors",
       headers: {
-        "Token": cookie,
+        "Token": token,
       },
     })
     const data = await res.data;
-    if(data.length != 0){
-      setFileDetails(data)
-    }
     return data;
   }
 
   return (
     <div>
-      <button onClick={getData} className="btn glass" >hello</button>
-      {fileDetails?.length != 0 && (
+      {fileDetails.length != 0 && (
         <div className="flex  justify-center mb-9 items-center ">
           <div className="overflow-hidden h-full w-fulll ">
             <table className="table w-full">
@@ -55,7 +45,8 @@ const Table = ({ _ }) => {
                 </tr>
               </thead>
               <tbody data-theme="autumn">
-                {fileDetails &&
+                {
+                  fileDetails &&
                   fileDetails.map((file, index) => {
                     if (index == 0) file.most_frequent_words = "Trained";
                     return (
@@ -67,8 +58,7 @@ const Table = ({ _ }) => {
                         result={file.most_frequent_words}
                       />
                     )
-                  }
-                  )
+                  })
 
                 }
               </tbody>
