@@ -1,4 +1,3 @@
-from redis_om import get_redis_connection
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers import file_router
