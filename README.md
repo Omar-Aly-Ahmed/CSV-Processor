@@ -1,4 +1,4 @@
-connect to remote redis db from ./app/db/__init__.py
+connect to remote redis db from ./app/models/__init__.py
 
 run server from project root folder
 uvicorn app.main:app --reload --port=8001
